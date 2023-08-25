@@ -1,0 +1,5 @@
+image: <pick the image you think is the most suitable to complete the task>
+
+stages:
+  - test
+  - deploy

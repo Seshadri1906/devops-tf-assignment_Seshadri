@@ -1,0 +1,10 @@
+*.zip
+*.secret
+node_modules
+
+.terraform*
+terraform.tfstate*
+localstack_*
+
+output.json
+.DS_Store
