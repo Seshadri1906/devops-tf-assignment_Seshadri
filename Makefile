@@ -9,7 +9,7 @@ build:
 	@docker build --tag ${TF_TAG} -f ./Dockerfile . --load
 
 network-up:
-	@docker network create ${DOCKER_NETWORK_NAME}
+	@docker network create ${DOCKER_NETWORK_NAME} || true
 
 network-down:
 	@docker network rm ${DOCKER_NETWORK_NAME}
