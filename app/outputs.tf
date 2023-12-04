@@ -1,5 +1,6 @@
+# In your outputs.tf
 output "lambda" {
-  value = aws_lambda_function.this
+  value = aws_lambda_function.helloworld # Ensure this matches the resource name
 }
 
 #output "apigateway" {

@@ -1,5 +1,51 @@
-image: <pick the image you think is the most suitable to complete the task>
+image: node:16
 
 stages:
   - test
+  - build
   - deploy
+
+variables:
+  AWS_DEFAULT_REGION: ap-southeast-1
+  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+
+cache:
+  paths:
+    - node_modules/
+    - .terraform
+
+before_script:
+  - npm install
+  - curl -Lo terraform.zip https://releases.hashicorp.com/terraform/1.0.0/terraform_1.0.0_linux_amd64.zip && unzip terraform.zip && mv terraform /usr/local/bin/ && chmod +x /usr/local/bin/terraform && rm terraform.zip
+  - terraform --version
+  - cp terraform.tfvars.example terraform.tfvars # Replace with your actual file for terraform variables
+
+unit_test:
+  stage: test
+  script:
+    - npm run lint
+    - npm run test
+  only:
+    - branches
+  except:
+    - master
+
+build:
+  stage: build
+  script:
+    - npm run build # Replace with your build command
+  only:
+    - master
+
+deploy_to_aws:
+  stage: deploy
+  script:
+    - terraform init
+    - terraform apply -auto-approve
+  only:
+    - master
+  environment:
+    name: production
+    url: http://your.production.domain # Replace with your actual production URL
+
