@@ -17,11 +17,11 @@ variables:
 
 cache:
   paths:
-    - eshadri1906/devops-tf-assignment/app/nodejs
+    - seshadri1906/devops-tf-assignment/app/nodejs
     - .terraform
 
 before_script:
-  - npm install
+  - seshadri1906/devops-tf-assignment/app/nodejs/package.json npm install
   - curl -Lo terraform.zip https://releases.hashicorp.com/terraform/1.0.0/terraform_1.0.0_linux_amd64.zip && unzip terraform.zip && mv terraform /usr/local/bin/ && chmod +x /usr/local/bin/terraform && rm terraform.zip
   - terraform --version
   - cp variables.tf terraform.tfvars # Replace with your actual file for terraform variables
