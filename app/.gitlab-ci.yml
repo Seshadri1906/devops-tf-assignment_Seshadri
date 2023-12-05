@@ -1,4 +1,4 @@
-image: node:16
+image: node:latest
 
 stages:
   - test
@@ -12,7 +12,7 @@ variables:
 
 cache:
   paths:
-    - node_modules/
+    - /builds/Seshadri1906/devops-tf-assignment/nodejs
     - .terraform
 
 before_script:
