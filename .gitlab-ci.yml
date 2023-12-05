@@ -1,9 +1,19 @@
 image: node:latest
 
 services:
-  - mysql:latest
+  - name: mysql:latest
+    alias: mysql
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql_strong_password
+      MYSQL_DATABASE: my_db
   - redis:latest
-  - postgres:latest
+  - name: postgres:latest
+    alias: postgres
+    environment:
+      POSTGRES_DB: my_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: postgres_strong_password
 
 stages:
   - test
@@ -11,23 +21,27 @@ stages:
   - deploy
 
 variables:
-  AWS_DEFAULT_REGION: ap-southeast-1
-  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  MYSQL_DATABASE: my_db
+  MYSQL_USER: user
+  MYSQL_PASSWORD: mysql_strong_password
+  MYSQL_ROOT_PASSWORD: mysql_strong_password
+  POSTGRES_DB: my_db
+  POSTGRES_USER: user
+  POSTGRES_PASSWORD: postgres_strong_password
+  REDIS_URL: "redis://redis"
+  NODE_ENV: "test"
 
 cache:
   paths:
-    - app/nodejs/node_modules/
-    - .npm/
+    - node_modules/
 
 before_script:
-  - apk add --update npm # Ensure npm is installed
-  - cd app/nodejs # Change directory to where package.json is located
+  - apt-get update -y && apt-get install -y npm
+  - npm install
 
 unit_test:
   stage: test
   script:
-    - npm install
     - npm run lint
     - npm run test
   only:
@@ -38,20 +52,16 @@ unit_test:
 build:
   stage: build
   script:
-    - npm run build # Replace with your actual build command
-  artifacts:
-    paths:
-      - build/ # Adjust according to your build output
+    - npm run build
   only:
     - master
 
 deploy_to_aws:
   stage: deploy
   script:
-    - terraform init
-    - terraform apply -auto-approve
+    - npm install -g aws-cdk
+    - cdk deploy --require-approval never
   only:
     - master
   environment:
     name: production
-    url: http://your.production.domain # Replace with your actual production URL
