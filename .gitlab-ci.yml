@@ -17,7 +17,7 @@ variables:
 
 cache:
   paths:
-    - node_modules/
+    - eshadri1906/devops-tf-assignment/app/nodejs
     - .terraform
 
 before_script:
