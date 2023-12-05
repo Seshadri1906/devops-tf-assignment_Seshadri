@@ -63,5 +63,3 @@ deploy_to_aws:
     - cdk deploy --require-approval never
   only:
     - master
-  environment:
-    name: production
