@@ -20,7 +20,6 @@ cache:
     - .npm/
 
 before_script:
-  - apk add --update npm # Ensure npm is installed
   - cd app/nodejs # Change directory to where package.json is located
 
 unit_test:
